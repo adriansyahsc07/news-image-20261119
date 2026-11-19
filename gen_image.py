@@ -15,6 +15,7 @@ WHITE = (245, 247, 250)
 MUTED = (176, 190, 208)
 ACCENT = (84, 160, 255)
 CARD = (21, 43, 74)
+DIVIDER = (70, 95, 132)
 
 FONT_DIR = "/usr/share/fonts/truetype/dejavu"
 BOLD = os.path.join(FONT_DIR, "DejaVuSans-Bold.ttf")
@@ -69,9 +70,11 @@ def main():
     img = Image.new("RGB", (WIDTH, HEIGHT), NAVY)
     draw = ImageDraw.Draw(img)
 
-    # Subtle top band and gold rule under the header.
+    # Subtle top band and a thin gold divider rule under the header,
+    # inset from the edges with a faint hairline beneath it.
     draw.rectangle([0, 0, WIDTH, 8], fill=GOLD)
-    draw.rectangle([0, 168, WIDTH, 172], fill=GOLD)
+    draw.rectangle([40, 168, WIDTH - 40, 171], fill=GOLD)
+    draw.rectangle([40, 178, WIDTH - 40, 179], fill=DIVIDER)
 
     # Header.
     title = "THE DAY IN ONE IMAGE"
@@ -96,6 +99,14 @@ def main():
         draw.rounded_rectangle(
             [margin, y, margin + card_w, y + block_h], radius=14, fill=CARD
         )
+        # Subtle separator line in the gap before the next story block.
+        if i < len(STORIES) - 1:
+            sep_y = y + block_h + gap // 2
+            draw.line(
+                [margin + 24, sep_y, WIDTH - margin - 24, sep_y],
+                fill=DIVIDER,
+                width=1,
+            )
         # Number badge.
         cx, cy, r = margin + 46, y + block_h // 2, 30
         draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=GOLD)
